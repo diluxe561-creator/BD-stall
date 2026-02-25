@@ -1752,6 +1752,88 @@
                 }
             });
         });
+
+        // Add this to your shop.html <script> section
+
+// Update cart count on page load
+document.addEventListener('DOMContentLoaded', function() {
+    updateNavCartCount();
+    
+    // Listen for cart updates from other pages
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'techhub_cart') {
+            updateNavCartCount();
+        }
+    });
+});
+
+// Update cart count in navigation
+function updateNavCartCount() {
+    const cart = JSON.parse(localStorage.getItem('techhub_cart')) || [];
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.querySelector('.cart-count').textContent = count;
+}
+
+// Add to cart function (call this when "Add to Cart" button is clicked)
+function addToCart(product) {
+    // Get existing cart
+    let cart = JSON.parse(localStorage.getItem('techhub_cart')) || [];
+    
+    // Check if item exists
+    const existingItem = cart.find(item => item.id === product.id);
+    
+    if (existingItem) {
+        const maxQty = existingItem.maxQuantity || 10;
+        if (existingItem.quantity < maxQty) {
+            existingItem.quantity += 1;
+            showToast(`Updated ${product.name} quantity`);
+        } else {
+            showToast('Maximum quantity reached');
+            return;
+        }
+    } else {
+        cart.push({
+            id: product.id,
+            name: product.name,
+            brand: product.brand,
+            price: product.price,
+            originalPrice: product.originalPrice || product.price,
+            image: product.image,
+            color: product.color || null,
+            colorName: product.colorName || null,
+            specs: product.specs || null,
+            quantity: 1,
+            maxQuantity: product.maxQuantity || 10
+        });
+        showToast(`${product.name} added to cart!`);
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('techhub_cart', JSON.stringify(cart));
+    
+    // Update UI
+    updateNavCartCount();
+    
+    // Animate cart icon
+    const cartIcon = document.querySelector('.cart-icon');
+    cartIcon.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+        cartIcon.style.transform = 'scale(1)';
+    }, 200);
+}
+
+// Example usage in your product cards:
+// <button class="add-cart-btn" onclick="addToCart({
+//     id: 1,
+//     name: 'iPhone 15 Pro Max',
+//     brand: 'Apple',
+//     price: 1199,
+//     originalPrice: 1199,
+//     image: 'https://...',
+//     color: '#5c5c5c',
+//     colorName: 'Natural Titanium',
+//     specs: '256GB • A17 Pro'
+// })"><i class="fas fa-plus"></i></button>
     </script>
 </body>
 </html>

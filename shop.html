@@ -1834,6 +1834,28 @@ function addToCart(product) {
 //     colorName: 'Natural Titanium',
 //     specs: '256GB • A17 Pro'
 // })"><i class="fas fa-plus"></i></button>
+        // Simple add
+addToCart({
+    id: 1,
+    name: "iPhone 15 Pro Max",
+    brand: "Apple",
+    price: 1199,
+    image: "https://..."
+});
+
+// With all options
+addToCart({
+    id: 1,
+    name: "iPhone 15 Pro Max",
+    brand: "Apple",
+    price: 1199,
+    originalPrice: 1299,
+    image: "https://...",
+    color: "#5c5c5c",
+    colorName: "Natural Titanium",
+    specs: "256GB • A17 Pro • 48MP",
+    maxQuantity: 5
+});
     </script>
 </body>
 </html>
